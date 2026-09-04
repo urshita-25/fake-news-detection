@@ -11,7 +11,7 @@ tfidf = joblib.load("tfidf_vectorizer.pkl")
 # Page configuration
 # -----------------------------
 st.set_page_config(
-    page_title="NewsGuard AI",
+    page_title="TruthLens AI",
     page_icon="📰",
     layout="centered"
 )
@@ -22,8 +22,8 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp {
-        background: linear-gradient(135deg, #0b1023 0%, #111827 18%, #1d4ed8 42%, #7c3aed 72%, #ec4899 100%);
-        color: #f8fafc;
+        background: #ffffff;
+        color: #0f172a;
     }
 
     .main .block-container {
@@ -34,40 +34,37 @@ st.markdown("""
 
     .title {
         text-align: center;
-        font-size: 48px;
+        font-size: 52px;
         font-weight: 900;
         margin-bottom: 8px;
-        color: #ffffff;
+        color: #0f172a;
         letter-spacing: 1px;
-        text-shadow: 0 6px 22px rgba(255, 255, 255, 0.25);
     }
 
     .subtitle {
         text-align: center;
         font-size: 18px;
-        color: #e2e8f0;
+        color: #475569;
         margin-bottom: 28px;
         padding: 12px 20px;
         border-radius: 999px;
-        background: rgba(15, 23, 42, 0.38);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(8px);
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
     }
 
     .hero-panel {
         padding: 24px 24px 18px 24px;
         border-radius: 22px;
-        background: rgba(15, 23, 42, 0.38);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.24);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
         margin-bottom: 22px;
-        backdrop-filter: blur(10px);
     }
 
     .feature-badge {
         display: inline-block;
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(168, 85, 247, 0.9));
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
         color: white;
         font-size: 11px;
         font-weight: 700;
@@ -76,28 +73,28 @@ st.markdown("""
         padding: 8px 12px;
         border-radius: 999px;
         margin-bottom: 12px;
-        box-shadow: 0 8px 20px rgba(96, 165, 250, 0.38);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
     }
 
     .hero-panel h3 {
         margin: 0 0 10px 0;
         font-size: 1.8rem;
-        color: #fff !important;
+        color: #0f172a !important;
     }
 
     .hero-panel p {
         margin: 0;
-        color: #dbeafe;
+        color: #475569;
         line-height: 1.6;
     }
 
     .card {
         padding: 25px;
         border-radius: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        border: 1px solid #e2e8f0;
         margin-bottom: 25px;
-        background: rgba(15, 23, 42, 0.42);
-        box-shadow: 0 15px 35px rgba(15, 23, 42, 0.18);
+        background: #ffffff;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
 
     .result {
@@ -107,104 +104,98 @@ st.markdown("""
         font-size: 30px;
         font-weight: 800;
         margin-top: 25px;
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(244, 63, 94, 0.25));
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        color: #fff;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #0f172a;
+        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
     }
 
     .info-box {
         padding: 20px 22px;
         border-radius: 18px;
-        background: rgba(15, 23, 42, 0.45);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
         margin-top: 20px;
-        color: #e2e8f0;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+        color: #334155;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
 
     .stButton > button {
-        background: linear-gradient(135deg, #22c55e 0%, #10b981 35%, #3b82f6 100%);
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #7c3aed 100%);
         color: white;
         border: none;
         border-radius: 14px;
         font-weight: 800;
         font-size: 1rem;
         padding: 0.8rem 1.5rem;
-        box-shadow: 0 12px 28px rgba(59, 130, 246, 0.38);
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.22);
         transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-        animation: pulseGlow 2.4s infinite ease-in-out;
     }
 
     .stButton > button:hover {
         transform: translateY(-2px) scale(1.01);
-        box-shadow: 0 16px 32px rgba(59, 130, 246, 0.48);
+        box-shadow: 0 16px 32px rgba(37, 99, 235, 0.3);
         filter: brightness(1.05);
-    }
-
-    @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 10px 26px rgba(59, 130, 246, 0.35); }
-        50% { box-shadow: 0 16px 32px rgba(168, 85, 247, 0.42); }
     }
 
     .stTextInput > div > div > input,
     .stTextArea > div > div > textarea {
-        background: rgba(15, 23, 42, 0.52);
-        color: #f8fafc;
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: #ffffff;
+        color: #0f172a;
+        border: 1px solid #cbd5e1;
         border-radius: 14px;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+        box-shadow: inset 0 0 0 1px rgba(15,23,42,0.02);
     }
 
     .stTextInput label,
     .stTextArea label,
     h3,
     .stMarkdown {
-        color: #f8fafc !important;
+        color: #0f172a !important;
     }
 
     [data-testid="stMetricValue"] {
-        color: #f8fafc !important;
+        color: #0f172a !important;
     }
 
     [data-testid="stMetricDelta"] {
-        color: #bfdbfe !important;
+        color: #475569 !important;
     }
 
     .stMetric {
-        background: rgba(15, 23, 42, 0.42);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 16px;
         padding: 1rem;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
     }
 
     .stAlert {
         border-radius: 14px;
-        border: 1px solid rgba(255,255,255,0.12);
+        border: 1px solid #e2e8f0;
     }
 
     .stCaption {
-        color: #dbeafe !important;
+        color: #475569 !important;
     }
 
     hr {
-        border: 1px solid rgba(255, 255, 255, 0.16);
+        border: 1px solid #e2e8f0;
     }
 
     .bottom-section {
         margin-top: 28px;
         padding: 24px 22px;
         border-radius: 20px;
-        background: rgba(15, 23, 42, 0.42);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.04);
     }
 
     .bottom-section h4 {
         margin: 0 0 14px 0;
         font-size: 1.5rem;
-        color: #ffffff !important;
+        color: #0f172a !important;
     }
 
     .feature-grid {
@@ -217,15 +208,15 @@ st.markdown("""
     .feature-box {
         padding: 18px 16px;
         border-radius: 16px;
-        background: rgba(30, 41, 59, 0.52);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        color: #dbeafe;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        color: #475569;
         min-height: 110px;
     }
 
     .feature-box strong {
         display: block;
-        color: #ffffff;
+        color: #0f172a;
         margin-bottom: 8px;
         font-size: 1.05rem;
     }
@@ -233,7 +224,7 @@ st.markdown("""
     .footer-note {
         margin-top: 20px;
         text-align: center;
-        color: #dbeafe;
+        color: #475569;
         font-size: 0.9rem;
         letter-spacing: 0.08em;
         opacity: 0.9;
@@ -245,13 +236,13 @@ st.markdown("""
 # Header
 # -----------------------------
 st.markdown(
-    '<div class="title">�️ NewsGuard </div>',
+    '<div class="title">📰 TruthLens</div>',
     unsafe_allow_html=True
 )
 
 st.markdown(
     '<div class="subtitle">'
-    'AI-powered Fake News Detection using NLP & Machine Learning'
+    'AI-powered fact-checking for smarter, safer news reading'
     '</div>',
     unsafe_allow_html=True
 )
@@ -352,7 +343,7 @@ if st.button("🔍 CHECK NEWS", use_container_width=True):
 
 
 st.caption(
-    "TruthCheck • Fake News Detection Project • NLP + Machine Learning"
+    "TruthLens • Fake News Detection Project • NLP + Machine Learning"
 )
 
 st.markdown(
@@ -374,7 +365,7 @@ st.markdown(
             </div>
         </div>
     </div>
-    <div class="footer-note">NewsGuard AI • Built for smarter, safer information checking</div>
+    <div class="footer-note">TruthLens AI • Built for smarter, safer information checking</div>
     """,
     unsafe_allow_html=True,
 )
